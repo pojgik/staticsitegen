@@ -72,3 +72,6 @@ class testHTMLNode(unittest.TestCase):
         child_node_2 = LeafNode("span", "child2")
         parent_node = ParentNode("div", [child_node_1, child_node_2])
         self.assertEqual(parent_node.to_html(), '<div><span>child1</span><span>child2</span></div>')
+
+if __name__ == "__main__":
+    unittest.main()
