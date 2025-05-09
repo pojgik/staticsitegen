@@ -30,4 +30,45 @@ class testHTMLNode(unittest.TestCase):
         self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
         node2 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         self.assertEqual(node2.to_html(), "<a href=\"https://www.google.com\">Click me!</a>")
+    
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        child_node_2 = LeafNode("span", "child2")
+        child_node_3 = LeafNode("span", "child3")
+        parent_node = ParentNode("div", [child_node])
+        parent_node2 = ParentNode("div", [child_node, child_node_2])
+        parent_node3 = ParentNode("div", [parent_node, child_node_3])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
+        self.assertEqual(parent_node2.to_html(), "<div><span>child</span><span>child2</span></div>")
+        self.assertEqual(parent_node3.to_html(), "<div><div><span>child</span></div><span>child3</span></div>")
         
+
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
+
+    def test_parent_node_with_no_tag(self):
+        with self.assertRaises(ValueError) as context:
+            ParentNode(None, [LeafNode("span", "child")]).to_html()
+        self.assertEqual(str(context.exception), 'Parent nodes MUST have a tag')
+
+    def test_parent_node_with_no_children(self):
+        with self.assertRaises(ValueError) as context:
+            ParentNode("div", None).to_html()
+        self.assertEqual(str(context.exception), 'Parent nodes MUST have children')
+
+    def test_parent_node_with_props(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node], {"class": "container"})
+        self.assertEqual(parent_node.to_html(), '<div class="container"><span>child</span></div>')
+
+    def test_parent_node_with_multiple_children(self):
+        child_node_1 = LeafNode("span", "child1")
+        child_node_2 = LeafNode("span", "child2")
+        parent_node = ParentNode("div", [child_node_1, child_node_2])
+        self.assertEqual(parent_node.to_html(), '<div><span>child1</span><span>child2</span></div>')
