@@ -21,6 +21,13 @@ class testHTMLNode(unittest.TestCase):
     def test_props_to_html(self):
         # Test props_to_html functionality
         node = HTMLNode(None, None, None, {"href": "https://www.google.com", "target": "_blank",})
-        text1 = ' href="https://www.google.com" target="_blank" '
+        text1 = ' href="https://www.google.com" target="_blank"'
         text2 = node.props_to_html()
         self.assertEqual(text1, text2)
+    
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+        node2 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertEqual(node2.to_html(), "<a href=\"https://www.google.com\">Click me!</a>")
+        
