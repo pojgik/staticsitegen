@@ -148,3 +148,6 @@ class testInlineTransformations(unittest.TestCase):
             TextNode(".", TextType.TEXT),
         ]
         self.assertListEqual(text_to_textnodes(input_text), expected_output)
+
+if __name__ == "__main__":
+    unittest.main()
