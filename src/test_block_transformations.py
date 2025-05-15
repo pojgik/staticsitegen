@@ -199,6 +199,28 @@ the **same** even with inline stuff
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
 
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title_simple(self):
+        md = "# My Title\nSome content here."
+        self.assertEqual(extract_title(md), "My Title")
+
+    def test_extract_title_multiple_headings(self):
+        md = "# First Title\n## Second Title\nContent."
+        self.assertEqual(extract_title(md), "First Title")
+
+    def test_extract_title_heading_not_first_line(self):
+        md = "Text before\n# Title After Text"
+        self.assertEqual(extract_title(md), "Title After Text")
+
+    def test_extract_title_no_title_raises(self):
+        md = "No heading here\nJust text."
+        with self.assertRaises(AttributeError):
+            extract_title(md)
+
+    def test_extract_title_empty(self):
+        md = ""
+        with self.assertRaises(AttributeError):
+            extract_title(md)
 
 if __name__ == "__main__":
     unittest.main()
